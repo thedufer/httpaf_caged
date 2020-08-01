@@ -18,7 +18,7 @@ module Server : sig
   type t = Tcp.Server.inet
 
   module Response_body : sig
-    type t
+    type t = String of string | Pipe of string Pipe.Reader.t
   end
 
   type response = Response.t * Response_body.t
