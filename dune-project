@@ -11,7 +11,7 @@
 
 (package
  (name httpaf_caged)
- (synopsis "A higher-level httpaf server interface")
+ (synopsis "A higher-level httpaf-async server interface")
  (description "Exposes a standard request->response server interface, as well as helpers for parsing various standard headers (cookies, accept, etc).")
  (depends
   (httpaf (>= 0.6.6))
