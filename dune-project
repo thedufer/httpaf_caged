@@ -16,6 +16,5 @@
  (depends
   (httpaf (>= 0.6.6))
   (angstrom (>= 0.14.1))
-  (dune (>= 2.6))
   (uri (>= 3.1.0))
   ))
