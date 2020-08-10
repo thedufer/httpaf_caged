@@ -1,6 +1,6 @@
 (lang dune 2.6)
 (name httpaf_caged)
-(version 1.0.0)
+(version 1.0.1)
 
 (generate_opam_files true)
 
