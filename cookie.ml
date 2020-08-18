@@ -2,26 +2,27 @@ open Core
 open Httpaf
 open Import
 
+let is_whitespace = function ' ' | '\t' | '\n' | '\r' -> true | _ -> false
+
 let cookies_parser =
   let open Angstrom in
   let cookie_name =
-    take_while1 (function
-      | '\000' .. '\031' | '\127' -> false
-      | '(' | ')' | '<' | '>' | '@' | ',' | ';' | ':' | '\\' | '"' | '/' | '['
-      | ']' | '?' | '=' | '{' | '}' | ' ' ->
-          false
+    take_while (function
+      | '\000' .. '\021' | '\127' | ';' | '=' -> false
       | _ -> true)
   in
   let cookie_value =
     let cookie_value_chars =
       take_while (function
-        | '!' | '#' .. '+' | '-' .. ':' | '<' .. '[' | ']' .. '~' -> true
-        | _ -> false)
+        | '\000' .. '\021' | '\127' | ';' -> false
+        | _ -> true)
     in
-    cookie_value_chars <|> (char '"' *> cookie_value_chars <* char '"')
+    char '"' *> cookie_value_chars <* char '"' <|> cookie_value_chars
   in
   let sep = string "; " in
-  sep_by sep (both (cookie_name <* char '=') cookie_value)
+  sep_by sep
+    ( both (cookie_name <* char '=' <* take_while is_whitespace) cookie_value
+    >>| fun (name, value) -> (String.rstrip name ~drop:is_whitespace, value) )
 
 let extract headers =
   Headers.get headers "Cookie"
